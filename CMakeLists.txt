@@ -714,5 +714,20 @@ if(configure_warnings)
     message("  ******\n")
 endif()
 
+# ---------------- liboqs integration --------------------
+find_library(OQS_LIBRARY oqs REQUIRED)
+find_path(OQS_INCLUDE_DIR oqs/oqs.h REQUIRED)
+
+if(NOT OQS_LIBRARY OR NOT OQS_INCLUDE_DIR)
+    message(FATAL_ERROR "liboqs library not found.")
+endif()
+
+message(STATUS "liboqs found at ${OQS_LIBRARY}")
+
+include_directories(${OQS_INCLUDE_DIR})
+target_link_libraries(bitcoind PRIVATE ${OQS_LIBRARY})
+target_link_libraries(bitcoin-cli PRIVATE ${OQS_LIBRARY})
+# ---------------- end liboqs integration ----------------
+
 # We want all build properties to be encapsulated properly.
 include(WarnAboutGlobalProperties)
